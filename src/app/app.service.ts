@@ -6,13 +6,14 @@ import { HttpClient } from '@angular/common/http';
 })
 export class AppService {
 
-  private urlSunatConvertion: string = 'https://api-sunat-cesar.onrender.com'
+  //API de mi propio backend creado
+  private urlSunatTipoCambio: string = 'https://api-sunat-cesar.onrender.com'
 
   constructor(
     private http: HttpClient
   ) { }
 
   getDataSunat(){
-    return this.http.get(`${this.urlSunatConvertion}`);
+    return this.http.get(`${this.urlSunatTipoCambio}`);
   }
 }

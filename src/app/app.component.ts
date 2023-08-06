@@ -5,13 +5,6 @@ import { EditMovementComponent } from './dialogs/edit-movement/edit-movement.com
 import { AppService } from './app.service';
 import { ConfirmDeleteComponent } from './dialogs/confirm-delete/confirm-delete.component';
 
-interface Movement {
-  fecha: string,
-  description: string,
-  moneda: string,
-  monto: number,
-  codigo_unico: string
-}
 
 @Component({
   selector: 'app-root',
@@ -23,24 +16,24 @@ export class AppComponent implements OnInit{
   title = 'prueba-ftb';
   movements: any[] = [];
   infoSunat: any;
+
+  progress_bar: boolean = false;
   constructor(
     public dialog: MatDialog,
     private appService: AppService
   ){ }
 
-  ngOnInit() {
-      if(!localStorage.getItem('infoSunat')){
-        this.getInfoSunat();
-      } else {
-        this.infoSunat = JSON.parse(localStorage.getItem('infoSunat')|| '')
-      }
+  async ngOnInit() {
+      await this.getInfoSunat();
   }
 
   getInfoSunat(){
+    this.progress_bar = true;
     this.appService.getDataSunat().subscribe(res => {
-      console.log('res', res);
+      // console.log('res', res);
       this.infoSunat = res;
       localStorage.setItem('infoSunat', JSON.stringify(res));
+      this.progress_bar = false;
     })
   }
 
@@ -48,50 +41,55 @@ export class AppComponent implements OnInit{
     const files = $event.target.files;
     if(files.length){
       const file = files[0];
-      console.log('file', file)
+      // console.log('file', file)
       const reader = new FileReader();
       reader.onload = (event) => {
-        console.log(event)
+        // console.log(event)
         const wb = read(event.target?.result)
-        console.log(wb)
+        // console.log(wb)
         const sheets = wb.SheetNames;
-        console.log(sheets)
+        // console.log(sheets)
 
         if(sheets.length){
-          console.log(wb.Sheets)
+          // console.log(wb.Sheets)
           const rows = utils.sheet_to_json(wb.Sheets[sheets[0]]);
           this.movements = rows;
-          console.log(this.movements)
+          // console.log(this.movements)
           this.convertUSDToPEN();
         }
       }
-
       reader.readAsArrayBuffer(file);
     }
   }
 
   convertUSDToPEN(){
     this.movements = this.movements.map((mov) =>{
+      
+      mov.monto = parseFloat(mov.monto);
+      // mov.monto = mov.monto.toFixed(2);
+      // console.log('mov', mov)
       if(mov.moneda === 'USD'){
         mov.moneda = 'PEN'
-        mov['extra'] = mov.monto
+        mov['converted'] = true
         mov.monto = mov.monto * this.infoSunat.compra
-        
       }
+      mov.monto = mov.monto.toFixed(2);
+      mov['extra'] = mov.monto / this.infoSunat.compra;
+      mov['extra'] = mov.extra.toFixed(2);
       return mov;
     })
-
   }
 
   openDialogEdit(item:any, index: any): void {
     const dialogRef = this.dialog.open(EditMovementComponent, {
       data: item,
       height: 'auto',
-      width: 'auto'
+      width: '300px'
     });
 
     dialogRef.componentInstance.new_movement.subscribe((data: any) => {
-      console.log('data', data)
+      // console.log('data', data)
+      data.monto = data.monto.toFixed(2);
       this.movements[index] = data;
     })
   }
@@ -103,8 +101,8 @@ export class AppComponent implements OnInit{
     });
 
     dialogRef.componentInstance.deleteItem.subscribe((data: any) => {
-      console.log('datita', data)
-      console.log('index', index)
+      // console.log('datita', data)
+      // console.log('index', index)
       if(data){
         this.movements.splice(index, 1)
         console.log(this.movements)

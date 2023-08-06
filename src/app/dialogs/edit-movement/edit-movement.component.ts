@@ -17,7 +17,7 @@ export class EditMovementComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any,
     private _formBuilder: FormBuilder,
   ){
-    console.log('data', data)
+    // console.log('data', data)
     this.movement = data;
   }
 

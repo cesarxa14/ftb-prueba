@@ -1,18 +1,19 @@
-<div class="container border my-2">
+<div *ngIf="infoSunat" class="container border my-2">
+  <mat-progress-bar *ngIf="progress_bar" mode="indeterminate"></mat-progress-bar>
   <div class="row m-2">
     <div class="col-4">
       <div class="alert alert-primary" role="alert">
-        Compra - {{infoSunat.compra}}
+        Compra:  {{infoSunat?.compra}}
       </div>
     </div>
     <div class="col-4">
       <div class="alert alert-primary" role="alert">
-        Venta - {{infoSunat.venta}}
+        Venta:  {{infoSunat?.venta}}
       </div>
     </div>
     <div class="col-4">
       <div class="alert alert-primary" role="alert">
-        Fecha - {{infoSunat.fecha}}
+        Fecha:  {{infoSunat?.fecha}}
       </div>
     </div>
   </div>
@@ -23,6 +24,14 @@
         <input class="form-control" type="file" (change)="csvImport($event)" id="formFile" accept=".csv, .xlsx">
       </div>
       <!-- <input class="btn btn-primary" type="file" value="Input"  accept=".csv .xlsx"> -->
+    </div>
+  </div>
+
+  <div class="row" *ngIf="movements.length > 0">
+    <div class="col">
+      <div class="alert alert-danger" role="alert">
+        Coloca el puntero encima de los montos para poder ver el valor en USD
+      </div>
     </div>
   </div>
 
@@ -45,7 +54,7 @@
             <td>{{mov.descripcion}}</td>
             <td [matTooltip]=" mov.extra ? mov.extra + ' USD' : ''"
               matTooltipPosition="left">{{mov.monto}}</td>
-            <td>{{mov.moneda}}</td>
+            <td>{{mov.converted ? 'USD → ': ''}} {{mov.moneda}}</td>
             <td>{{mov.codigo_unico}}</td>
             <td>
               <button type="button" class="btn btn-sm btn-primary mx-2" (click)="openDialogEdit(mov, i)">
