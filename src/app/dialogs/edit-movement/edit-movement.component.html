@@ -1,0 +1,57 @@
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h1>Edit Movement</h1>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <form [formGroup]="editForm" (ngSubmit)="editMovement()">
+                <div class="mb-3">
+                    <label for="exampleInputEmail1" class="form-label">Fecha</label>
+                    <input type="date" formControlName="fecha" class="form-control">
+                    <div *ngIf="fecha?.hasError('required')" class="invalid-feedback">
+                        Este campo es requerido 
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="exampleInputEmail1" class="form-label">Descripcion</label>
+                    <input type="text" formControlName="descripcion" class="form-control">
+                    <div *ngIf="descripcion?.hasError('required')" class="invalid-feedback">
+                        Este campo es requerido 
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="exampleInputEmail1" class="form-label">Monto</label>
+                    <input type="text" formControlName="monto" class="form-control">
+                    <div *ngIf="monto?.hasError('required')" class="invalid-feedback">
+                        Este campo es requerido 
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="" class="form-label">Moneda</label>
+                    <input type="text" formControlName="moneda" class="form-control">
+                    <div *ngIf="moneda?.hasError('required')" class="invalid-feedback">
+                        Este campo es requerido 
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="" class="form-label">Codigo</label>
+                    <input type="text" formControlName="codigo_unico" class="form-control">
+                    <div *ngIf="codigo_unico?.hasError('required')" class="invalid-feedback">
+                        Este campo es requerido 
+                    </div>
+                </div>
+             
+                
+                <div class="row justify-content-center text-center">
+                    <div class="col-md-6">
+                        <button type="submit" [disabled]="editForm.invalid" class="btn btn-dark w-100">Editar</button>
+                    </div>
+                </div>
+                
+            </form>
+        </div>
+    </div>
+</div>
